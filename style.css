@@ -68,3 +68,9 @@ input, textarea {
   margin-top: 5px;
   margin-bottom: 15px;
 }
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
