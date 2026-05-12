@@ -7,7 +7,9 @@
 </head>
 <body>
 
-<header><h1>Checkout</h1></header>
+<header>
+  <h1>Checkout</h1>
+</header>
 
 <nav>
   <a href="index.html">Home</a>
@@ -17,8 +19,9 @@
   <a href="contact.html">Contact</a>
 </nav>
 
-<div class="container">
+<div class="checkout-container">
 
+  <h2>Your Cart</h2>
   <div id="cart"></div>
 
   <form action="send_order.php" method="POST" onsubmit="prepareOrder()">
@@ -36,28 +39,43 @@
 <script>
 function renderCart() {
   let cart = getCart();
-  let html = "<ul>";
+  let cartDiv = document.getElementById("cart");
+
+  if (cart.length === 0) {
+    cartDiv.innerHTML = "<p>Your cart is empty.</p>";
+    return;
+  }
+
+  let html = "<div class='cart-list'>";
   let total = 0;
 
   cart.forEach(item => {
-    let t = item.price * item.quantity;
-    total += t;
-    html += `<li>${item.name} x${item.quantity} = $${t}</li>`;
+    let itemTotal = item.price * item.quantity;
+    total += itemTotal;
+
+    html += `
+      <div class="cart-item">
+        <span>${item.name} x${item.quantity}</span>
+        <span>$${itemTotal}</span>
+      </div>
+    `;
   });
 
-  html += "</ul><p>Total: $" + total + "</p>";
-  document.getElementById("cart").innerHTML = html;
+  html += `</div><p class="total">Total: $${total}</p>`;
+
+  cartDiv.innerHTML = html;
 }
 
 function prepareOrder() {
-  document.getElementById("orderData").value =
-    JSON.stringify(getCart());
+  document.getElementById("orderData").value = JSON.stringify(getCart());
 }
 
 renderCart();
 </script>
 
-<footer><p>&copy; 2026 Cologne Brand</p></footer>
+<footer>
+  <p>&copy; 2026 Cologne Brand</p>
+</footer>
 
 </body>
 </html>
