@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Checkout</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Cologne Brand</title>
   <link rel="stylesheet" href="style.css">
-  <script src="cart.js"></script>
 </head>
 <body>
 
@@ -15,67 +16,102 @@
   <a href="index.html">Home</a>
   <a href="about.html">About</a>
   <a href="products.html">Products</a>
-  <a href="checkout.html">Cart</a>
+  <a href="checkout.html">Cart (<span id="cart-count">0</span>)</a>
   <a href="contact.html">Contact</a>
 </nav>
 
-<div class="checkout-container">
+<main class="checkout-page">
+  <section class="checkout-box">
+    <h2>Your Cart</h2>
 
-  <h2>Your Cart</h2>
-  <div id="cart"></div>
+    <div id="cart-container"></div>
 
-  <form action="send_order.php" method="POST" onsubmit="prepareOrder()">
-    <input type="text" name="name" placeholder="Name" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <textarea name="address" placeholder="Address" required></textarea>
+    <form id="checkout-form" action="send_order.php" method="POST">
+      <h2>Customer Information</h2>
 
-    <input type="hidden" name="orderData" id="orderData">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required>
 
-    <button type="submit">Place Order</button>
-  </form>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
 
-</div>
+      <label for="address">Shipping Address</label>
+      <textarea id="address" name="address" rows="4" required></textarea>
 
-<script>
-function renderCart() {
-  let cart = getCart();
-  let cartDiv = document.getElementById("cart");
+      <input type="hidden" id="orderData" name="orderData">
 
-  if (cart.length === 0) {
-    cartDiv.innerHTML = "<p>Your cart is empty.</p>";
-    return;
-  }
-
-  let html = "<div class='cart-list'>";
-  let total = 0;
-
-  cart.forEach(item => {
-    let itemTotal = item.price * item.quantity;
-    total += itemTotal;
-
-    html += `
-      <div class="cart-item">
-        <span>${item.name} x${item.quantity}</span>
-        <span>$${itemTotal}</span>
-      </div>
-    `;
-  });
-
-  html += `</div><p class="total">Total: $${total}</p>`;
-
-  cartDiv.innerHTML = html;
-}
-
-function prepareOrder() {
-  document.getElementById("orderData").value = JSON.stringify(getCart());
-}
-
-renderCart();
-</script>
+      <button type="submit">Place Order</button>
+    </form>
+  </section>
+</main>
 
 <footer>
   <p>&copy; 2026 Cologne Brand</p>
 </footer>
+
+<script src="cart.js"></script>
+<script>
+  function renderCheckoutCart() {
+    const cart = getCart();
+    const cartContainer = document.getElementById("cart-container");
+    const checkoutForm = document.getElementById("checkout-form");
+
+    if (cart.length === 0) {
+      cartContainer.innerHTML = `
+        <p>Your cart is empty.</p>
+        <a class="shop-link" href="products.html">Return to Products</a>
+      `;
+      checkoutForm.style.display = "none";
+      return;
+    }
+
+    checkoutForm.style.display = "block";
+
+    let total = 0;
+    let html = "";
+
+    cart.forEach(item => {
+      const itemTotal = item.price * item.quantity;
+      total += itemTotal;
+
+      html += `
+        <div class="checkout-item">
+          <div>
+            <h3>${item.name}</h3>
+            <p>$${item.price} each</p>
+          </div>
+
+          <div class="quantity-controls">
+            <button type="button" onclick="decreaseQuantity('${item.name}')">-</button>
+            <span>${item.quantity}</span>
+            <button type="button" onclick="increaseQuantity('${item.name}')">+</button>
+          </div>
+
+          <div>
+            <strong>$${itemTotal}</strong>
+            <br>
+            <button type="button" class="remove-btn" onclick="removeFromCart('${item.name}')">Remove</button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+      <div class="checkout-total">
+        <h3>Total: $${total}</h3>
+        <button type="button" onclick="clearCart()">Clear Cart</button>
+      </div>
+    `;
+
+    cartContainer.innerHTML = html;
+  }
+
+  document.getElementById("checkout-form").addEventListener("submit", function() {
+    document.getElementById("orderData").value = JSON.stringify(getCart());
+  });
+
+  renderCheckoutCart();
+</script>
 
 </body>
 </html>
