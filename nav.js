@@ -1,6 +1,6 @@
-document.addEventListener("DOMContentLoaded", () +> {
+document.addEventListener("DOMContentLoaded", () => {
 
-  const navHTML = '
+  const navHTML = `
     <nav>
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
@@ -10,11 +10,12 @@ document.addEventListener("DOMContentLoaded", () +> {
       </a>
       <a href="contact.html">Contact</a>
     </nav>
-  ':
+  `;
 
   const navContainer = document.getElementById("navbar");
 
   if (navContainer) {
     navContainer.innerHTML = navHTML;
   }
+
 });
