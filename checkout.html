@@ -1,63 +1,67 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <title>Checkout</title>
-      <link rel="stylesheet" href="style.css">
-      <script src="cart.js"></script>
-    </head>
-    <body>
-    
-      <header><h1>Checkout</h1></header>
-      
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="products.html">Products</a>
-        <a href="checkout.html">Cart</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-      
-      <div class="container">
-      
-        <div id="cart"></div>
-      
-        <form action="send_order.php" method="POST" onsubmit="prepareOrder()">
-          <input type="text" name="name" placeholder="Name" required>
-          <input type="email" name="email" placeholder="Email" required>
-          <textarea name="address" placeholder="Address" required></textarea>
-      
-          <input type="hidden" name="orderData" id="orderData">
-      
-          <button type="submit">Place Order</button>
-        </form>
-      
-      </div>
-      
-      <script>
-      function renderCart() {
-        let cart = getCart();
-        let html = "<ul>";
-        let total = 0;
-      
-        cart.forEach(item => {
-          let t = item.price * item.quantity;
-          total += t;
-          html += `<li>${item.name} x${item.quantity} = $${t}</li>`;
-        });
-      
-        html += "</ul><p>Total: $" + total + "</p>";
-        document.getElementById("cart").innerHTML = html;
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+</head>
+<body>
+  <h1>Checkout</h1>
+
+  <div id="cart-items"></div>
+  <h3 id="cart-total"></h3>
+
+  <form action="send_order.php" method="POST" onsubmit="prepareOrderData()">
+    <label for="customerName">Full Name</label><br>
+    <input type="text" id="customerName" name="customerName" required><br><br>
+
+    <label for="customerEmail">Email</label><br>
+    <input type="email" id="customerEmail" name="customerEmail" required><br><br>
+
+    <label for="customerAddress">Shipping Address</label><br>
+    <textarea id="customerAddress" name="customerAddress" required></textarea><br><br>
+
+    <input type="hidden" id="orderData" name="orderData">
+
+    <button type="submit">Place Order</button>
+  </form>
+
+  <script>
+    function getCart() {
+      return JSON.parse(localStorage.getItem("cart")) || [];
+    }
+
+    function renderCart() {
+      const cart = getCart();
+      const cartItemsDiv = document.getElementById("cart-items");
+      const cartTotal = document.getElementById("cart-total");
+
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = "<p>Your cart is empty.</p>";
+        cartTotal.textContent = "";
+        return;
       }
-      
-      function prepareOrder() {
-        document.getElementById("orderData").value =
-          JSON.stringify(getCart());
-      }
-      
-      renderCart();
-      </script>
-      
-      <footer><p>&copy; 2026 Cologne Brand</p></footer>
-      
-    </body>
-  </html>
+
+      let html = "<ul>";
+      let total = 0;
+
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        html += `<li>${item.name} - $${item.price} x ${item.quantity} = $${itemTotal}</li>`;
+      });
+
+      html += "</ul>";
+      cartItemsDiv.innerHTML = html;
+      cartTotal.textContent = "Total: $" + total.toFixed(2);
+    }
+
+    function prepareOrderData() {
+      const cart = getCart();
+      document.getElementById("orderData").value = JSON.stringify(cart);
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
