@@ -35,12 +35,13 @@
 </footer>
 
 <script src="cart.js"></script>
+<script src="nav.js"></script>
 <script>
-  renderCartPage();
+  document.addEventListener("DOMContentLoaded", function () {
+    renderCartPage();
+    updateCartCount();
+  });
 </script>
 
-  <script src="cart.js"></script>
-  <script src="nav.js"></script>
-  
 </body>
 </html>
