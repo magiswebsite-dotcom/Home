@@ -24,24 +24,15 @@
   <section class="checkout-box">
     <h2>Your Cart</h2>
 
-    <div id="cart-container"></div>
+    <div id="cart-items"></div>
 
-    <form id="checkout-form" action="send_order.php" method="POST">
-      <h2>Customer Information</h2>
-
-      <label for="name">Full Name</label>
-      <input type="text" id="name" name="name" required>
-
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
-
-      <label for="address">Shipping Address</label>
-      <textarea id="address" name="address" rows="4" required></textarea>
-
-      <input type="hidden" id="orderData" name="orderData">
-
-      <button type="submit">Place Order</button>
-    </form>
+    <div class="checkout-actions">
+      <a href="products.html" class="secondary-btn">Continue Shopping</a>
+      <button type="button" onclick="clearCart()" class="secondary-btn">Clear Cart</button>
+      <button type="button" onclick="checkoutWithPayPal()" class="paypal-btn">
+        Checkout with PayPal
+      </button>
+    </div>
   </section>
 </main>
 
@@ -51,66 +42,7 @@
 
 <script src="cart.js"></script>
 <script>
-  function renderCheckoutCart() {
-    const cart = getCart();
-    const cartContainer = document.getElementById("cart-container");
-    const checkoutForm = document.getElementById("checkout-form");
-
-    if (cart.length === 0) {
-      cartContainer.innerHTML = `
-        <p>Your cart is empty.</p>
-        <a class="shop-link" href="products.html">Return to Products</a>
-      `;
-      checkoutForm.style.display = "none";
-      return;
-    }
-
-    checkoutForm.style.display = "block";
-
-    let total = 0;
-    let html = "";
-
-    cart.forEach(item => {
-      const itemTotal = item.price * item.quantity;
-      total += itemTotal;
-
-      html += `
-        <div class="checkout-item">
-          <div>
-            <h3>${item.name}</h3>
-            <p>$${item.price} each</p>
-          </div>
-
-          <div class="quantity-controls">
-            <button type="button" onclick="decreaseQuantity('${item.name}')">-</button>
-            <span>${item.quantity}</span>
-            <button type="button" onclick="increaseQuantity('${item.name}')">+</button>
-          </div>
-
-          <div>
-            <strong>$${itemTotal}</strong>
-            <br>
-            <button type="button" class="remove-btn" onclick="removeFromCart('${item.name}')">Remove</button>
-          </div>
-        </div>
-      `;
-    });
-
-    html += `
-      <div class="checkout-total">
-        <h3>Total: $${total}</h3>
-        <button type="button" onclick="clearCart()">Clear Cart</button>
-      </div>
-    `;
-
-    cartContainer.innerHTML = html;
-  }
-
-  document.getElementById("checkout-form").addEventListener("submit", function() {
-    document.getElementById("orderData").value = JSON.stringify(getCart());
-  });
-
-  renderCheckoutCart();
+  renderCartPage();
 </script>
 
 </body>
