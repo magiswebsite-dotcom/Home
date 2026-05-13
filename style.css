@@ -43,17 +43,26 @@ nav a {
 
 .card {
   background: white;
-  padding: 20px;
   width: 250px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  padding: 0;
+}
+
+.card h3 {
+  padding: 20px 20px 10px;
+  margin: 0;
 }
 
 .card img {
-  width: calc(100% + 40px);
-  margin-left: -20px;
-  margin-right: -20px;
+  width: 100%;
+  height: auto;
   display: block;
+}
+
+.card-content {
+  padding: 20px;
 }
 
 button {
